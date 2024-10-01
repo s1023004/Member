@@ -1,0 +1,85 @@
+﻿@model List<Member.Models.Member1>
+
+@{
+    ViewData["Title"] = "會員";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>會員</h1>
+<form asp-action="Index" method="post">
+    <div class="form-group">        
+        <input type="text" id="keyword" name="keyword" class="form-text" placeholder="輸入關鍵字">
+        <button type="submit" class="btn btn-primary">查詢</button>
+    </div>    
+</form>
+<p>
+    <a asp-action="Create">新增</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                帳號
+            </th>
+            <th>
+                姓名
+            </th>
+            <th>
+                性別
+            </th>
+            <th>
+                啟動
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.enable)
+            </td>
+            <td>
+                @Html.ActionLink("修改", "Edit", new { pk = item.pk }) |
+                @Html.ActionLink("明細", "Details", new { pk = item.pk }) |
+                <a href="#" data-pk="@item.pk" class="delete">刪除</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".delete").click(function(){
+            var line = $(this).closest("tr");
+            var pk = $(this).data("pk");            
+            if(confirm("確定刪除?")){
+            $.ajax({
+                url: '@Url.Action("Delete", "Home")',
+                type: 'POST',
+                data: {
+                    pk: pk
+                },
+                success: function (response) {
+                    alert(response);
+                    line.remove();
+                }
+
+
+            })
+           }
+            
+        })
+    })
+    
+</script>
